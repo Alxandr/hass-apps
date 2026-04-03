@@ -1,7 +1,7 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-configuration
 name: G-Man
 description: Garage Manager
-version: v0.2.2
+version: v0.3.0
 slug: gman
 init: false # Don't use docker's init system, image contains tini
 arch:
