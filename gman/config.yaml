@@ -1,0 +1,30 @@
+name: G-Man
+description: Garage Manager
+version: v0.1.2
+slug: gman
+init: false # Don't use docker's init system, image contains tini
+arch:
+  - amd64
+  - aarch64
+
+homeassistant_api: true
+
+ports:
+  "26172/TCP": 26172
+
+ports_description:
+  "26172/TCP": The webserver port
+
+image: ghcr.io/alxandr/gman
+
+environment:
+  GMAN_HOST: http://supervisor/core/
+
+schema:
+  title: str
+  script: str
+  key: password
+  pin: str(4,6)
+
+options:
+  title: Garage Manager
