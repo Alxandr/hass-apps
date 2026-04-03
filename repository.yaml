@@ -1,3 +1,4 @@
+# https://developers.home-assistant.io/docs/apps/repository#repository-configuration
 name: Alxandr's Home Assistant Apps
 url: https://github.com/alxandr/hass-apps
 maintainer: Aleksander Heintz <alxandr@alxandr.me>

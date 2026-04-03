@@ -1,3 +1,4 @@
+# https://developers.home-assistant.io/docs/apps/configuration#app-configuration
 name: G-Man
 description: Garage Manager
 version: v0.1.2
@@ -10,10 +11,10 @@ arch:
 homeassistant_api: true
 
 ports:
-  "26172/TCP": 26172
+  "26172/tcp": 26172
 
 ports_description:
-  "26172/TCP": The webserver port
+  "26172/tcp": The webserver port
 
 image: ghcr.io/alxandr/gman
 
