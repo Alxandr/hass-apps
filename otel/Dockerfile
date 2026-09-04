@@ -1,5 +1,8 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-dockerfile
 ARG BUILD_FROM=ghcr.io/home-assistant/base:3.23
+
+FROM ghcr.io/spiffe/spiffe-helper:v0.11.0 AS spiffe-helper
+
 FROM ${BUILD_FROM}
 
 ARG BUILD_ARCH
@@ -22,4 +25,5 @@ RUN set -eux; \
     install -m 0755 "spire-${SPIRE_VERSION}/bin/spire-agent" /usr/local/bin/spire-agent; \
     rm -rf "${archive}" "${checksum}" "spire-${SPIRE_VERSION}"
 
+COPY --from=spiffe-helper /spiffe-helper /usr/local/bin/spiffe-helper
 COPY rootfs /

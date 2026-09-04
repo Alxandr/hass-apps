@@ -1,0 +1,5 @@
+#!/command/execlineb -P
+
+s6-if { s6-test -s /run/spire/svid/tls.crt }
+s6-if { s6-test -s /run/spire/svid/tls.key }
+s6-test -s /run/spire/svid/ca.crt

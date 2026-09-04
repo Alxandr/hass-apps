@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv bashio
+set -Eeuo pipefail
+
+mkdir -p /run/spire/svid
+
+bashio::log.info "Starting SPIFFE helper"
+exec s6-notifyoncheck -n 0 -w 2000 \
+  /usr/local/bin/spiffe-helper -config /etc/s6-overlay/s6-rc.d/spiffe-helper/data/helper.conf
