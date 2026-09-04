@@ -4,5 +4,5 @@ set -Eeuo pipefail
 mkdir -p /data/spire /run/spire
 
 bashio::log.info "Starting SPIRE agent"
-s6-notifyoncheck
-exec spire-agent run -config /run/spire/agent.conf
+exec s6-notifyoncheck -n 0 -w 2000 \
+  /usr/local/bin/spire-agent run -config /run/spire/agent.conf
