@@ -1,12 +1,13 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-configuration
 name: OpenTelemetry
 description: SPIRE protected OpenTelemetry exporter
-version: v0.1.0
+version: v0.1.1
 slug: otel
 arch:
   - amd64
   - aarch64
 
+init: false # s6 is init
 ports:
   "26172/tcp": 26172
 
