@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv bashio
+set -Eeuo pipefail
+
+mkdir -p /data/spire /run/spire
+
+bashio::log.info "Starting SPIRE agent"
+exec spire-agent run -config /run/spire/agent.conf

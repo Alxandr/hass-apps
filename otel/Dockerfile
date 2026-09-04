@@ -1,0 +1,23 @@
+# https://developers.home-assistant.io/docs/apps/configuration#app-dockerfile
+ARG BUILD_FROM=ghcr.io/home-assistant/base:3.23
+ARG BUILD_ARCH
+ARG SPIRE_VERSION=1.15.3
+FROM ${BUILD_FROM}
+
+RUN apk add --no-cache wget
+RUN set -eux; \
+    case "${BUILD_ARCH}" in \
+    amd64) spire_arch=amd64 ;; \
+    aarch64) spire_arch=arm64 ;; \
+    *) echo "Unsupported architecture: ${BUILD_ARCH}" >&2; exit 1 ;; \
+    esac; \
+    archive="spire-${SPIRE_VERSION}-linux-${spire_arch}-musl.tar.gz"; \
+    base_url="https://github.com/spiffe/spire/releases/download/v${SPIRE_VERSION}"; \
+    wget -q "${base_url}/${archive}"; \
+    wget -q "${base_url}/${archive}_sha256sum.txt"; \
+    sha256sum -c "${archive}_sha256sum.txt"; \
+    tar -xzf "${archive}"; \
+    install -m 0755 "spire-${SPIRE_VERSION}/bin/spire-agent" /usr/local/bin/spire-agent; \
+    rm -rf "${archive}" "${archive}_sha256sum.txt" "spire-${SPIRE_VERSION}"
+
+COPY rootfs /

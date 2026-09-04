@@ -1,0 +1,37 @@
+# https://developers.home-assistant.io/docs/apps/configuration#app-configuration
+name: OpenTelemetry
+description: SPIRE protected OpenTelemetry exporter
+version: v0.1.0
+slug: otel
+init: true
+arch:
+  - amd64
+  - aarch64
+
+ports:
+  "26172/tcp": 26172
+
+ports_description:
+  "26172/tcp": The webserver port
+
+image: ghcr.io/alxandr/hass-otel
+
+environment:
+  GMAN_HOST: http://supervisor/core/
+
+schema:
+  spire:
+    address: str
+    port: int
+    trust_domain: str
+    log_level: list(trace|debug|info|warn|error)
+    trust_bundle: str
+    join_token: password?
+
+options:
+  spire:
+    address: null
+    port: 8081
+    trust_domain: null
+    log_level: info
+    trust_bundle: ""
