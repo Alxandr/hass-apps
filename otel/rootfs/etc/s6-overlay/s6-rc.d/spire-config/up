@@ -1,2 +1,2 @@
 #!/command/execlineb -P
-/etc/s6-overlay/s6-rc.d/spire-config/render
+/etc/s6-overlay/s6-rc.d/spire-config/data/render
