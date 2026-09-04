@@ -1,8 +1,9 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-dockerfile
 ARG BUILD_FROM=ghcr.io/home-assistant/base:3.23
+FROM ${BUILD_FROM}
+
 ARG BUILD_ARCH
 ARG SPIRE_VERSION=1.15.3
-FROM ${BUILD_FROM}
 
 RUN apk add --no-cache wget
 RUN set -eux; \
