@@ -1,7 +1,7 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-dockerfile
 ARG BUILD_FROM=ghcr.io/home-assistant/base:3.23
 
-FROM ghcr.io/spiffe/spiffe-helper:v0.11.0 AS spiffe-helper
+FROM ghcr.io/spiffe/spiffe-helper:0.11.0 AS spiffe-helper
 
 FROM ${BUILD_FROM}
 
