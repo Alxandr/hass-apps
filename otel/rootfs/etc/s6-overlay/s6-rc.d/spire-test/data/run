@@ -1,0 +1,4 @@
+#!/usr/bin/with-contenv bashio
+set -Eeuo pipefail
+
+spire-agent api fetch x509 -socketPath /run/spire/agent.sock

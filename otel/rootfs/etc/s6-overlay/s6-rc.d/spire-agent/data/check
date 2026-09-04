@@ -1,0 +1,3 @@
+#!/command/execlineb -P
+
+/usr/local/bin/spire-agent healthcheck -socketPath /run/spire/agent.sock
