@@ -41,16 +41,20 @@ jobs:
           CHANGED_FILES: ${{ steps.changed_files.outputs.all_changed_files }}
         run: |
           changed_apps=()
+          buildable_apps=()
+
+          for app in ${APPS}; do
+            if [[ " ${BUILD_EXCLUDED_APPS} " == *" ${app} "* ]]; then
+              continue
+            fi
+            buildable_apps+=("${app}")
+          done
 
           # If the workflow file itself changed, rebuild all apps
           if [[ "${CHANGED_FILES}" =~ \.github/workflows/(builder|build-app)\.yaml ]]; then
-            changed_apps=(${APPS})
+            changed_apps=(${buildable_apps})
           else
-            for app in ${APPS}; do
-              if [[ " ${BUILD_EXCLUDED_APPS} " == *" ${app} "* ]]; then
-                continue
-              fi
-
+            for app in ${buildable_apps}; do
               for file in ${MONITORED_FILES}; do
                 if [[ "${CHANGED_FILES}" =~ ${app}/${file} ]]; then
                   changed_apps+=("${app}")
