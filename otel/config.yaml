@@ -3,7 +3,6 @@ name: OpenTelemetry
 description: SPIRE protected OpenTelemetry exporter
 version: v0.1.0
 slug: otel
-init: true
 arch:
   - amd64
   - aarch64
