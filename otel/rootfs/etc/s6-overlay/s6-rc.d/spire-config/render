@@ -1,0 +1,51 @@
+#!/usr/bin/with-contenv bashio
+set -Eeuo pipefail
+
+address=$(bashio::config 'spire.address')
+port=$(bashio::config 'spire.port')
+trust_domain=$(bashio::config 'spire.trust_domain')
+log_level=$(bashio::config 'spire.log_level')
+trust_bundle=$(bashio::config 'spire.trust_bundle')
+join_token=$(bashio::config 'spire.join_token')
+
+mkdir -p /run/spire
+umask 077
+
+printf '%s\n' "${trust_bundle}" >/run/spire/trust-bundle.pem
+
+if [[ -n "${join_token}" ]]; then
+  printf '%s\n' "${join_token}" >/run/spire/join-token.txt
+  join_token_config='  join_token_file = "/run/spire/join-token.txt"'
+else
+  join_token_config=''
+fi
+
+cat >/run/spire/agent.conf <<EOF
+agent {
+  trust_domain = "${trust_domain}"
+  trust_bundle_path = "/run/spire/trust-bundle.pem"
+
+  data_dir = "/data/spire"
+  server_address = "${address}"
+  server_port = "${port}"
+  socket_path = "/run/spire/agent.sock"
+  log_level = "${log_level}"
+${join_token_config}
+}
+
+plugins {
+  NodeAttestor "join_token" {
+    plugin_data {}
+  }
+
+  KeyManager "disk" {
+    plugin_data {
+      directory = "/data/spire/agent"
+    }
+  }
+
+  WorkloadAttestor "unix" {
+    plugin_data {}
+  }
+}
+EOF
