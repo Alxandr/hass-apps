@@ -5,7 +5,7 @@ extensions:
     filename: /run/spire/svid/otel.token
 
 receivers:
-  hostmetrics:
+  host_metrics:
     collection_interval: 30s
     scrapers:
       cpu:
@@ -14,37 +14,37 @@ receivers:
       disk:
       network:
       paging:
-      filesystem:
-        metrics:
-          system.filesystem.utilization:
-            enabled: true
-        exclude_mount_points:
-          match_type: regexp
-          mount_points:
-            - ^/dev($|/)
-            - ^/proc($|/)
-            - ^/sys($|/)
-        exclude_fs_types:
-          match_type: strict
-          fs_types:
-            - autofs
-            - bpf
-            - cgroup2
-            - configfs
-            - debugfs
-            - devpts
-            - devtmpfs
-            - fusectl
-            - hugetlbfs
-            - mqueue
-            - nsfs
-            - overlay
-            - proc
-            - procfs
-            - pstore
-            - securityfs
-            - sysfs
-            - tracefs
+      # filesystem:
+      #   metrics:
+      #     system.filesystem.utilization:
+      #       enabled: true
+      #   exclude_mount_points:
+      #     match_type: regexp
+      #     mount_points:
+      #       - ^/dev($|/)
+      #       - ^/proc($|/)
+      #       - ^/sys($|/)
+      #   exclude_fs_types:
+      #     match_type: strict
+      #     fs_types:
+      #       - autofs
+      #       - bpf
+      #       - cgroup2
+      #       - configfs
+      #       - debugfs
+      #       - devpts
+      #       - devtmpfs
+      #       - fusectl
+      #       - hugetlbfs
+      #       - mqueue
+      #       - nsfs
+      #       - overlay
+      #       - proc
+      #       - procfs
+      #       - pstore
+      #       - securityfs
+      #       - sysfs
+      #       - tracefs
 
 processors:
   memory_limiter:
@@ -60,7 +60,7 @@ processors:
     timeout: 10s
 
 exporters:
-  otlp/gateway:
+  otlp_grpc/gateway:
     endpoint: otel.monitoring.internal:443
     auth:
       authenticator: bearertokenauth/otel
@@ -69,6 +69,6 @@ service:
   extensions: [health_check, bearertokenauth/otel]
   pipelines:
     metrics:
-      receivers: [hostmetrics]
+      receivers: [host_metrics]
       processors: [memory_limiter, resource/home_assistant, batch]
-      exporters: [otlp/gateway]
+      exporters: [otlp_grpc/gateway]

@@ -31,3 +31,5 @@ RUN set -eux; \
 COPY --from=spiffe-helper /spiffe-helper /usr/local/bin/spiffe-helper
 COPY --from=otelcol /otelcol-contrib /usr/local/bin/otelcol-contrib
 COPY rootfs /
+
+RUN update-ca-certificates
