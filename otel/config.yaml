@@ -1,8 +1,17 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-configuration
 name: OpenTelemetry
 description: SPIRE protected OpenTelemetry exporter
-version: v0.1.9
+version: v0.1.10
 slug: otel
+
+host_network: true
+full_access: true
+docker_api: true
+host_dbus: true
+privileged:
+  - SYS_RAWIO
+  - SYS_ADMIN
+
 arch:
   - amd64
   - aarch64

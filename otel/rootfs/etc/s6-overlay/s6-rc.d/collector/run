@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv bashio
+set -Eeuo pipefail
+
+bashio::log.info "Starting OpenTelemetry Collector"
+exec s6-notifyoncheck -n 0 -w 2000 \
+  /usr/local/bin/otelcol-contrib \
+  --config /etc/s6-overlay/s6-rc.d/collector/data/config.yaml

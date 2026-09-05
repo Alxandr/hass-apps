@@ -1,7 +1,10 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-dockerfile
 ARG BUILD_FROM=ghcr.io/home-assistant/base:3.23
+ARG OTELCOL_VERSION=0.160.0
+ARG SPIFFE_HELPER_VERSION=0.11.0
 
-FROM ghcr.io/spiffe/spiffe-helper:0.11.0 AS spiffe-helper
+FROM ghcr.io/spiffe/spiffe-helper:${SPIFFE_HELPER_VERSION} AS spiffe-helper
+FROM otel/opentelemetry-collector-contrib:${OTELCOL_VERSION} AS otelcol
 
 FROM ${BUILD_FROM}
 
@@ -26,4 +29,5 @@ RUN set -eux; \
     rm -rf "${archive}" "${checksum}" "spire-${SPIRE_VERSION}"
 
 COPY --from=spiffe-helper /spiffe-helper /usr/local/bin/spiffe-helper
+COPY --from=otelcol /otelcol-contrib /usr/local/bin/otelcol-contrib
 COPY rootfs /
