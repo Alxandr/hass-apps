@@ -46,7 +46,40 @@ receivers:
       #       - sysfs
       #       - tracefs
 
+  prometheus/node_exporter:
+    config:
+      scrape_configs:
+        - job_name: 'node_exporter'
+          static_configs:
+            - targets: ['127.0.0.1:9100']
+          
+          metric_relabel_configs:
+            # Whitelist only temperature readings and their thresholds/alarms.
+            - action: keep
+              source_labels: [__name__]
+              regex: ^node_hwmon_temp_(celsius|alarm|crit_celsius|max_celsius|min_celsius)$
+            
+            # Keep only the CPU and NVMe sensors currently exposed by HAOS.
+            - action: keep
+              source_labels: [chip, sensor]
+              regex: ^(thermal_thermal_zone0;temp0|nvme_nvme0;temp1)$
+
 processors:
+  transform/hwmon:
+    error_mode: ignore
+    metric_statements:
+      - context: metric
+        statements:
+          - set(metric.name, "system.temperature") where metric.name == "node_hwmon_temp_celsius"
+          - set(metric.name, "system.temperature.alarm") where metric.name == "node_hwmon_temp_alarm"
+          - set(metric.name, "system.temperature.crit") where metric.name == "node_hwmon_temp_crit_celsius"
+          - set(metric.name, "system.temperature.max") where metric.name == "node_hwmon_temp_max_celsius"
+          - set(metric.name, "system.temperature.min") where metric.name == "node_hwmon_temp_min_celsius"
+      - context: datapoint
+        statements:
+          - set(attributes["sensor"], "cpu") where attributes["chip"] == "thermal_thermal_zone0" and attributes["sensor"] == "temp0"
+          - set(attributes["sensor"], "nvme_composite") where attributes["chip"] == "nvme_nvme0" and attributes["sensor"] == "temp1"
+          - delete_key(attributes, "chip")
   memory_limiter:
     check_interval: 1s
     limit_mib: 64
@@ -69,6 +102,6 @@ service:
   extensions: [health_check, bearertokenauth/otel]
   pipelines:
     metrics:
-      receivers: [host_metrics]
-      processors: [memory_limiter, resource/home_assistant, batch]
+      receivers: [host_metrics, prometheus/node_exporter]
+      processors: [memory_limiter, transform/hwmon, resource/home_assistant, batch]
       exporters: [otlp_grpc/gateway]

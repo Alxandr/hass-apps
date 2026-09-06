@@ -6,6 +6,6 @@ mkdir -p /data/spire /run/spire
 bashio::log.info "Starting node exporter"
 exec s6-notifyoncheck -n 0 -w 2000 \
   /usr/local/bin/node_exporter \
-  --web.listen-address=0.0.0.0:9100 \
+  --web.listen-address=127.0.0.1:9100 \
   --collector.disable-defaults \
   --collector.hwmon
