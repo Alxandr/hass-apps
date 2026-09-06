@@ -1,7 +1,7 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-configuration
 name: OpenTelemetry
 description: SPIRE protected OpenTelemetry exporter
-version: v0.1.12
+version: v0.1.13
 slug: otel
 
 host_network: true
@@ -18,10 +18,10 @@ arch:
 
 init: false # s6 is init
 ports:
-  "26172/tcp": 26172
+  "9100/tcp": 9100
 
 ports_description:
-  "26172/tcp": The webserver port
+  "9100/tcp": Temp metrics port
 
 image: ghcr.io/alxandr/hass-otel
 
